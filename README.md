@@ -30,3 +30,8 @@
           chmod 744 /etc/ecsMonitor/ecsMonitor.sh
           touch /var/spool/cron/root
           grep -q -F 'ecsMonitor'  /var/spool/cron/root || echo '* * * * * /etc/ecsMonitor/ecsMonitor.sh' >> /var/spool/cron/root
+
+
+### awscli.conf: TBH I dont remember why i did this or if its actually needed... The context is
+          cp -a /etc/awslogs/awscli.conf /etc/awslogs/awscli.conf.original
+          copy file to /etc/awslogs/awscli.conf
