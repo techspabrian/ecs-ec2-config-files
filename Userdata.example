@@ -1,0 +1,63 @@
+#not adding awscli or the metrics script in this version
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          #log shipping to cloudwatch 
+          yum install -y awslogs git screen
+          echo "fs.file-max = 1024000" >> /etc/sysctl.conf
+          sysctl -p
+          echo "* soft     nproc          102400" >> /etc/security/limits.conf
+          echo "* hard     nproc          102400" >> /etc/security/limits.conf
+          echo "* soft     nofile         102400" >> /etc/security/limits.conf
+          echo "* hard     nofile         102400" >> /etc/security/limits.conf
+          cp -a /etc/awslogs/awslogs.conf /etc/awslogs/awslogs.conf.original
+          cp -a /etc/sysconfig/docker /etc/sysconfig/docker.original
+          git clone https://github.com/techspabrian/ecs-ec2-config-files.git
+          cp -a ecs-ec2-config-files/docker /etc/sysconfig/docker 
+          cp -a ecs-ec2-config-files/awslogs.conf /etc/awslogs/awslogs.conf
+          service docker restart
+          chkconfig awslogs on
+          service awslogs restart
+          #join ECS cluster 
+          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+          yum install -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+          
+          
+# The old version
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+          echo "vm.max_map_count = 262144" >> /etc/sysctl.conf
+          echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
+          echo "fs.file-max = 65536" >> /etc/sysctl.conf
+          echo "* soft     nproc          65535" >> /etc/security/limits.conf
+          echo "* hard     nproc          65535" >> /etc/security/limits.conf
+          echo "* soft     nofile         65535" >> /etc/security/limits.conf
+          echo "* hard     nofile         65535" >> /etc/security/limits.conf
+          sysctl -p
+          yum update -y
+          #log shipping to cloudwatch setup
+          yum install -y awslogs
+          cp -a /etc/awslogs/awslogs.conf /etc/awslogs/awslogs.conf.originalyum install -y jq bc aws-cli perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protocol-https python27-pip
+          mkdir -p /etc/ecsMonitor
+          mkdir -p /root/.aws
+          touch /root/.aws/config
+          grep -q -F 'default'  /root/.aws/config || echo '[default]' >> /root/.aws/config
+          grep -q -F 'region'  /root/.aws/config || echo 'region = us-west-2' >> /root/.aws/config
+          aws s3 cp s3://tapgoods-infrastructure-files/ecsMonitor.sh /etc/ecsMonitor
+          chmod 744 /etc/ecsMonitor/ecsMonitor.sh
+          touch /var/spool/cron/root
+          grep -q -F 'ecsMonitor'  /var/spool/cron/root || echo '* * * * * /etc/ecsMonitor/ecsMonitor.sh' >> /var/spool/cron/root
+          #join ECS cluster 
+          yum install -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+          cp -a /etc/awslogs/awscli.conf /etc/awslogs/awscli.conf.original
+          aws s3 cp s3://tapgoods-infrastructure-files/awslogs.conf /etc/awslogs/awslogs.conf
+          aws s3 cp s3://tapgoods-infrastructure-files/awscli.conf /etc/awslogs/awscli.conf
+          chkconfig awslogs on
+          service awslogs restart
+          #metric shipping to cloudwatch setup
+          
