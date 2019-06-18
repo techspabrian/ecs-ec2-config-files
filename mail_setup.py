@@ -4,7 +4,7 @@ import json
 from botocore.exceptions import ClientError
 
 secret_id="smtp_login"
-region="us-west-2"
+region="REGION"
 
 def get_secret( sn, rn):
 
@@ -64,7 +64,7 @@ f.write("set smtp-use-starttls\n")
 f.write("set ssl-verify=ignore\n")
 f.write("set smtp-auth=login\n")
 f.write("set smtp=smtp://email-smtp.{}.amazonaws.com:587\n".format(region))
-f.write("set from=\"alerts@techspabrian.com\"\n")
+f.write("set from=\"alerts@DOMAIN\"\n")
 f.write("set smtp-auth-user={}\n".format(obj['mail_user'])) 
 f.write("set smtp-auth-password={}\n".format(obj['mail_pw'])) 
 f.write("set ssl-verify=ignore\n")
