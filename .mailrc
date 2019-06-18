@@ -1,0 +1,9 @@
+set smtp-use-starttls
+set ssl-verify=ignore
+set smtp-auth=login
+set smtp=smtp://email-smtp.us-west-2.amazonaws.com:587
+set from="alerts@techspabrian.com"
+set smtp-auth-user=AKIA5YURZJR3USK534OW
+set smtp-auth-password=BJN8NoXQYBGn6YDhNj5bo7nZAYv27jYjx/aBYd6/Fh8X
+set ssl-verify=ignore
+set nss-config-dir="/etc/pki/nssdb/"

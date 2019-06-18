@@ -35,3 +35,7 @@
 ### awscli.conf: TBH I dont remember why i did this or if its actually needed... The context is
           cp -a /etc/awslogs/awscli.conf /etc/awslogs/awscli.conf.original
           copy file to /etc/awslogs/awscli.conf
+
+### aide.conf: FIM configurtion file, generic. 
+
+
