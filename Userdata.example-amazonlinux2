@@ -1,0 +1,39 @@
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          #log shipping to cloudwatch 
+          yum install -y awslogs git screen aide mailx python3 python3-pip amazon-cloudwatch-agent
+          sysctl -w fs.file-max=1024000
+          sysctl -w vm.max_map_count=262144
+          echo "* soft     nproc          102400" >> /etc/security/limits.conf
+          echo "* hard     nproc          102400" >> /etc/security/limits.conf
+          echo "* soft     nofile         102400" >> /etc/security/limits.conf
+          echo "* hard     nofile         102400" >> /etc/security/limits.conf
+          cp -a /etc/awslogs/awslogs.conf /etc/awslogs/awslogs.conf.original
+          cp -a /etc/aide.conf /etc/aide.conf.original
+          cp -a /etc/sysconfig/docker /etc/sysconfig/docker.original
+          git clone https://github.com/techspabrian/ecs-ec2-config-files.git
+          cp -a ecs-ec2-config-files/aide.sh-amazonlinux2 /usr/local/bin/aide.sh
+          chmod 700 /usr/local/bin/aide.sh
+          echo '00 04 * * * /usr/local/bin/aide.sh'  >> /var/spool/cron/root
+          echo '00 01 * * * /usr/bin/docker system prune -a -f --volumes' >> /var/spool/cron/root
+          python3 -m pip install -r ecs-ec2-config-files/requirements.txt-amazonlinux2
+          sed -i /REGION/s/REGION/${AWS::Region}/ ecs-ec2-config-files/mail_setup.py-amazonlinux2
+          sed -i /DOMAIN/s/DOMAIN/${DnsName}/ ecs-ec2-config-files/mail_setup.py-amazonlinux2
+          python3 ecs-ec2-config-files/mail_setup.py -amazonlinux2
+          cp -a ecs-ec2-config-files/aide.conf-amazonlinux2 /etc/aide.conf
+          cp -a ecs-ec2-config-files/docker-amazonlinux2 /etc/sysconfig/docker 
+          cp -a ecs-ec2-config-files/awslogs.conf-amazonlinux2 /etc/awslogs/awslogs.conf
+          cp -a ecs-ec2-config-files/awscli.conf-amazonlinux2 /etc/awslogs/awscli.conf
+          systemctl enable docker
+          systemctl start docker
+          systemctl enable awslogs 
+          systemctl restart awslogs
+          aide --init
+          rm -f /var/lib/aide/aide.db.gz
+          mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+          #join ECS cluster 
+          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+          yum install -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}

@@ -1,0 +1,132 @@
+[general]
+state_file = /var/lib/awslogs/agent-state
+
+
+
+[/var/log/messages]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/messages
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/messages
+
+
+[/var/log/docker]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/docker
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/docker
+
+
+[/var/log/ecs/ecs-init]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/ecs/ecs-init.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/ecs/ecs-init
+
+
+
+[/var/log/ecs/ecs-agent]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/ecs/ecs-agent*
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/ecs/ecs-agent
+
+
+[/var/log/secure]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/secure
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/secure
+
+[/var/log/maillog]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/maillog
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/maillog
+
+[/var/log/cron]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cron
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/cron
+
+[/var/log/yum]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/yum.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/yum
+
+[/var/log/cfn-init-cmd]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cfn-init-cmd.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/cfn-init-cmd
+
+[/var/log/cfn-init]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cfn-init.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/cfn-init
+
+[/var/log/cfn-wire]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cfn-wire.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/cfn-wire
+
+
+[/var/log/cloud-init]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cloud-init.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/cloud-init
+
+[/var/log/cloud-init-output]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cloud-init-output.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/cloud-init-output
+
+
+[/var/log/audit]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/audit/audit.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/audit
+
+
+[/var/log/aide]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/aide/aide.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /var/log/aide-FIM
