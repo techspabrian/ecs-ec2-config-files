@@ -1,6 +1,6 @@
 DAEMON_MAXFILES=1048576
 
-OPTIONS="--default-ulimit nofile=102400:102400"
+OPTIONS="--default-ulimit nofile=102400:102400 --storage-opt dm.basesize=50G"
 
 DAEMON_PIDFILE_TIMEOUT=10
 
